@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم - المركز الإعلامي</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#f0f2f5;--sidebar:#1a1d2e;--sidebar-hover:#252840;--card:#fff;
+--primary:#4f6ef7;--primary-light:#eef1ff;--text:#2d3142;--text-light:#6b7280;
+--success:#22c55e;--warning:#f59e0b;--danger:#ef4444;--info:#06b6d4;
+--shadow:0 2px 12px rgba(0,0,0,.08);--radius:14px;
+}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
+
+/* Sidebar */
+.sidebar{width:260px;background:var(--sidebar);color:#fff;position:fixed;top:0;right:0;height:100vh;display:flex;flex-direction:column;z-index:100;transition:transform .3s}
+.sidebar-header{padding:28px 24px 20px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sidebar-header h2{font-size:1.3rem;font-weight:800;background:linear-gradient(135deg,#4f6ef7,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sidebar-header span{font-size:.8rem;color:rgba(255,255,255,.45);display:block;margin-top:2px}
+.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;color:rgba(255,255,255,.65);cursor:pointer;transition:.2s;margin-bottom:4px;font-size:.95rem}
+.nav-item:hover,.nav-item.active{background:var(--sidebar-hover);color:#fff}
+.nav-item.active{background:var(--primary);color:#fff}
+.nav-item i{width:20px;text-align:center;font-size:1rem;flex-shrink:0}
+.sidebar-footer{padding:16px 20px;border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px}
+.sidebar-footer img{width:40px;height:40px;border-radius:50%;border:2px solid var(--primary)}
+.sidebar-footer .user-info{font-size:.85rem}
+.sidebar-footer .user-info span{color:rgba(255,255,255,.45);font-size:.75rem;display:block}
+
+/* Main */
+.main{margin-right:260px;flex:1;padding:28px 32px}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+.topbar h1{font-size:1.6rem;font-weight:700}
+.topbar-actions{display:flex;gap:12px;align-items:center}
+.search-box{background:var(--card);border:1px solid #e5e7eb;border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:8px;width:260px}
+.search-box input{border:none;outline:none;background:none;font-family:inherit;font-size:.9rem;width:100%;color:var(--text)}
+.icon-btn{width:42px;height:42px;border-radius:10px;border:1px solid #e5e7eb;background:var(--card);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:.2s}
+.icon-btn:hover{border-color:var(--primary);color:var(--primary)}
+.icon-btn .badge{position:absolute;top:-4px;left:-4px;width:18px;height:18px;background:var(--danger);color:#fff;font-size:.65rem;border-radius:50%;display:flex;align-items:center;justify-content:center}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:28px}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:flex-start;transition:transform .2s}
+.stat-card:hover{transform:translateY(-3px)}
+.stat-card .info h3{font-size:.85rem;color:var(--text-light);font-weight:500;margin-bottom:8px}
+.stat-card .info .value{font-size:1.8rem;font-weight:800}
+.stat-card .info .change{font-size:.78rem;margin-top:6px;display:flex;align-items:center;gap:4px}
+.change.up{color:var(--success)}.change.down{color:var(--danger)}
+.stat-icon{width:52px;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.si-blue{background:var(--primary-light);color:var(--primary)}
+.si-green{background:#dcfce7;color:var(--success)}
+.si-yellow{background:#fef3c7;color:var(--warning)}
+.si-cyan{background:#cffafe;color:var(--info)}
+
+/* Grid layout */
+.grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-bottom:28px}
+
+/* Card */
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.card-header{padding:20px 24px;border-bottom:1px solid #f3f4f6;display:flex;justify-content:space-between;align-items:center}
+.card-header h3{font-size:1.05rem;font-weight:700}
+.card-header .badge-pill{background:var(--primary-light);color:var(--primary);font-size:.75rem;padding:4px 12px;border-radius:20px;font-weight:600}
+
+/* Table */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:14px 24px;text-align:right;font-size:.88rem}
+th{color:var(--text-light);font-weight:600;background:#fafbfc;white-space:nowrap}
+tr:not(:last-child) td{border-bottom:1px solid #f3f4f6}
+tr:hover td{background:#fafbfc}
+.status{padding:4px 14px;border-radius:20px;font-size:.78rem;font-weight:600}
+.status.done{background:#dcfce7;color:#15803d}
+.status.progress{background:#dbeafe;color:#1d4ed8}
+.status.pending{background:#fef3c7;color:#b45309}
+.priority{display:flex;align-items:center;gap:4px}.priority-dot{width:8px;height:8px;border-radius:50%}
+.priority-dot.high{background:var(--danger)}.priority-dot.mid{background:var(--warning)}.priority-dot.low{background:var(--success)}
+
+/* News */
+.news-list{padding:8px 0}
+.news-item{padding:16px 24px;border-bottom:1px solid #f3f4f6;cursor:pointer;transition:.15s}
+.news-item:last-child{border:none}
+.news-item:hover{background:#fafbfc}
+.news-item .category{font-size:.72rem;font-weight:700;text-transform:uppercase;color:var(--primary);margin-bottom:6px;letter-spacing:.5px}
+.news-item h4{font-size:.92rem;font-weight:600;margin-bottom:4px;line-height:1.5}
+.news-item .meta{font-size:.78rem;color:var(--text-light);display:flex;gap:12px}
+
+/* Quick actions */
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 24px}
+.quick-item{text-align:center;padding:18px 8px;border-radius:12px;background:#fafbfc;cursor:pointer;transition:.2s}
+.quick-item:hover{background:var(--primary-light)}
+.quick-item i{font-size:1.5rem;margin-bottom:8px;color:var(--primary);display:block}
+.quick-item span{font-size:.8rem;font-weight:600;color:var(--text)}
+
+/* Mobile */
+.menu-toggle{display:none;position:fixed;top:16px;right:16px;z-index:200;width:44px;height:44px;border-radius:10px;background:var(--sidebar);color:#fff;border:none;cursor:pointer;font-size:1.3rem}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:90}
+@media(max-width:1024px){
+.stats{grid-template-columns:repeat(2,1fr)}
+.grid-2{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+.sidebar{transform:translateX(100%)}
+.sidebar.open{transform:translateX(0)}
+.menu-toggle{display:flex;align-items:center;justify-content:center}
+.overlay.show{display:block}
+.main{margin-right:0;padding:20px 16px;padding-top:70px}
+.stats{grid-template-columns:1fr 1fr}
+.topbar{flex-direction:column;align-items:flex-start;gap:12px}
+.search-box{width:100%}
+.quick-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:480px){.stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<h2>المركز الإعلامي</h2>
+<span>لوحة التحكم الرئيسية</span>
+</div>
+<nav class="sidebar-nav">
+<div class="nav-item active"><i class="fas fa-home"></i>الرئيسية</div>
+<div class="nav-item"><i class="fas fa-users"></i>الموظفون</div>
+<div class="nav-item"><i class="fas fa-newspaper"></i>الأخبار</div>
+<div class="nav-item"><i class="fas fa-tasks"></i>المهام</div>
+<div class="nav-item"><i class="fas fa-photo-video"></i>الوسائط</div>
+<div class="nav-item"><i class="fas fa-cog"></i>الإعدادات</div>
+</nav>
+<div class="sidebar-footer">
+<img src="https://api.dicebear.com/7.x/initials/svg?seed=أحمد&backgroundColor=4f6ef7" alt="user">
+<div class="user-info"><strong>أحمد الرشيدي</strong><span>مدير النظام</span></div>
+</div>
+</aside>
+
+<main class="main">
+<div class="topbar">
+<div>
+<h1>مرحبا، أحمد</h1>
+<p style="color:var(--text-light);font-size:.9rem;margin-top:4px">إليك ملخص اليوم — الأحد ٢٢ مارس ٢٠٢٦</p>
+</div>
+<div class="topbar-actions">
+<div class="search-box">
+<i class="fas fa-search" style="color:#9ca3af"></i>
+<input type="text" placeholder="بحث...">
+</div>
+<div class="icon-btn"><span class="badge">3</span><i class="fas fa-bell"></i></div>
+</div>
+</div>
+
+<section class="stats">
+<div class="stat-card"><div class="info"><h3>الموظفون</h3><div class="value">١٢٤</div><div class="change up"><i class="fas fa-arrow-up" style="font-size:.7rem"></i> ١٢% <span style="color:var(--text-light)">من الشهر الماضي</span></div></div><div class="stat-icon si-blue"><i class="fas fa-user-tie"></i></div></div>
+<div class="stat-card"><div class="info"><h3>الأخبار المنشورة</h3><div class="value">٥٦</div><div class="change up"><i class="fas fa-arrow-up" style="font-size:.7rem"></i> ٨% <span style="color:var(--text-light)">من الشهر الماضي</span></div></div><div class="stat-icon si-green"><i class="fas fa-newspaper"></i></div></div>
+<div class="stat-card"><div class="info"><h3>المهام النشطة</h3><div class="value">٣٨</div><div class="change down"><i class="fas fa-arrow-down" style="font-size:.7rem"></i> ٣% <span style="color:var(--text-light)">من الشهر الماضي</span></div></div><div class="stat-icon si-yellow"><i class="fas fa-clipboard-list"></i></div></div>
+<div class="stat-card"><div class="info"><h3>ملفات الوسائط</h3><div class="value">٢٬٤٨٠</div><div class="change up"><i class="fas fa-arrow-up" style="font-size:.7rem"></i> ٢٤% <span style="color:var(--text-light)">من الشهر الماضي</span></div></div><div class="stat-icon si-cyan"><i class="fas fa-images"></i></div></div>
+</section>
+
+<div class="grid-2">
+<div class="card">
+<div class="card-header"><h3>المهام الأخيرة</h3><div class="badge-pill">٨ مهام</div></div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>المهمة</th><th>المسؤول</th><th>الأولوية</th><th>الحالة</th><th>الموعد</th></tr></thead>
+<tbody>
+<tr><td>تصوير المؤتمر الصحفي</td><td>سارة أحمد</td><td><span class="priority"><span class="priority-dot high"></span>عالية</span></td><td><span class="status progress">قيد التنفيذ</span></td><td>٢٥ مارس</td></tr>
+<tr><td>تحرير التقرير السنوي</td><td>محمد خالد</td><td><span class="priority"><span class="priority-dot high"></span>عالية</span></td><td><span class="status pending">معلّقة</span></td><td>٢٨ مارس</td></tr>
+<tr><td>تحديث الموقع الإلكتروني</td><td>نورة العتيبي</td><td><span class="priority"><span class="priority-dot mid"></span>متوسطة</span></td><td><span class="status done">مكتملة</span></td><td>٢٠ مارس</td></tr>
+<tr><td>إعداد النشرة الإخبارية</td><td>فهد المطيري</td><td><span class="priority"><span class="priority-dot mid"></span>متوسطة</span></td><td><span class="status progress">قيد التنفيذ</span></td><td>٢٦ مارس</td></tr>
+<tr><td>مراجعة المحتوى المرئي</td><td>ريم السالم</td><td><span class="priority"><span class="priority-dot low"></span>منخفضة</span></td><td><span class="status done">مكتملة</span></td><td>١٩ مارس</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<div class="card-header"><h3>آخر الأخبار</h3><div class="badge-pill">جديد</div></div>
+<div class="news-list">
+<div class="news-item"><div class="category">مؤتمرات</div><h4>انطلاق فعاليات المؤتمر الدولي للإعلام الرقمي</h4><div class="meta"><span>قبل ساعتين</span><span>١٢ مشاهدة</span></div></div>
+<div class="news-item"><div class="category">تقارير</div><h4>إصدار التقرير الفصلي لأداء المركز الإعلامي</h4><div class="meta"><span>قبل ٥ ساعات</span><span>٣٤ مشاهدة</span></div></div>
+<div class="news-item"><div class="category">فعاليات</div><h4>ورشة عمل حول صناعة المحتوى الرقمي للموظفين</h4><div class="meta"><span>أمس</span><span>٥٦ مشاهدة</span></div></div>
+<div class="news-item"><div class="category">إعلانات</div><h4>تعيين مدير جديد لقسم الإنتاج المرئي</h4><div class="meta"><span>قبل يومين</span><span>٨٩ مشاهدة</span></div></div>
+</div>
+</div>
+</div>
+
+<div class="card" style="margin-bottom:28px">
+<div class="card-header"><h3>إجراءات سريعة</h3></div>
+<div class="quick-grid">
+<div class="quick-item"><i class="fas fa-plus-circle"></i><span>إضافة خبر</span></div>
+<div class="quick-item"><i class="fas fa-user-plus"></i><span>إضافة موظف</span></div>
+<div class="quick-item"><i class="fas fa-cloud-upload-alt"></i><span>رفع ملف</span></div>
+<div class="quick-item"><i class="fas fa-calendar-plus"></i><span>مهمة جديدة</span></div>
+<div class="quick-item"><i class="fas fa-comment-dots"></i><span>إرسال رسالة</span></div>
+<div class="quick-item"><i class="fas fa-file-alt"></i><span>تقرير جديد</span></div>
+</div>
+</div>
+</main>
+
+<script>
+function toggleSidebar(){
+document.getElementById('sidebar').classList.toggle('open');
+document.getElementById('overlay').classList.toggle('show');
+}
+document.querySelectorAll('.nav-item').forEach(item=>{
+item.addEventListener('click',function(){
+document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+this.classList.add('active');
+if(window.innerWidth<=768)toggleSidebar();
+});
+});
+</script>
+</body>
+</html>
